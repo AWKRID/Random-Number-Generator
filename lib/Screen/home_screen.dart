@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:project_random_number_generator/Screen/settings_screen.dart';
+import 'package:project_random_number_generator/component/number_row.dart';
 
 import '../constant/color.dart';
 
@@ -33,7 +34,9 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _Header(onPressed: onSettingsPop,),
+              _Header(
+                onPressed: onSettingsPop,
+              ),
               _Body(randomNumbers: randomNumbers),
               _Footer(onPressed: onRandomNumberGenerated),
             ],
@@ -45,9 +48,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void onSettingsPop() async {
     final int? result = await Navigator.of(context).push<int>(
-      MaterialPageRoute(builder: (BuildContext context) {
-        return SettingsScreen();
-      },),
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return SettingsScreen(maxNumber: maxNumber);
+        },
+      ),
     );
     if (result != null) {
       setState(() {
@@ -87,7 +92,7 @@ class _Header extends StatelessWidget {
           ),
         ),
         IconButton(
-          onPressed:onPressed,
+          onPressed: onPressed,
           icon: Icon(
             Icons.settings,
             color: RED_COLOR,
@@ -109,24 +114,16 @@ class _Body extends StatelessWidget {
         children: randomNumbers
             .asMap()
             .entries
-            .map((x) => Padding(
-                  padding: EdgeInsets.only(
-                    bottom: x.key == 2 ? 0 : 16.0,
-                  ),
-                  child: Row(
-                    children: x.value
-                        .toString()
-                        .split('')
-                        .map(
-                          (y) => Image.asset(
-                            'asset/img/$y.png',
-                            height: 70.0,
-                            width: 50.0,
-                          ),
-                        )
-                        .toList(),
-                  ),
-                ))
+            .map(
+              (x) => Padding(
+                padding: EdgeInsets.only(
+                  bottom: x.key == 2 ? 0 : 16.0,
+                ),
+                child: NumberRow(
+                  number: x.value.toInt(),
+                ),
+              ),
+            )
             .toList(),
       ),
     );
